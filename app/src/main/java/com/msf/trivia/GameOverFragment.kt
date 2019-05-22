@@ -7,7 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.navigation.findNavController
 import com.msf.trivia.databinding.FragmentGameBinding
+import com.msf.trivia.databinding.FragmentGameOverBinding
 
 
 /**
@@ -17,7 +19,10 @@ import com.msf.trivia.databinding.FragmentGameBinding
 class GameOverFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        val binding: FragmentGameBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_game_over, container, false)
+        val binding: FragmentGameOverBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_game_over, container, false)
+        binding.tryAgainButton.setOnClickListener{
+            it.findNavController().popBackStack()
+        }
         return binding.root
     }
 
