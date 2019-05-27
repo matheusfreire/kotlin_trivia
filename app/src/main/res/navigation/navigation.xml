@@ -30,4 +30,6 @@
         <action android:id="@+id/action_gameOverFragment_to_gameFragment" app:destination="@id/gameFragment"
                 app:popUpTo="@+id/titleFragment"/>
     </fragment>
+    <fragment android:id="@+id/aboutFragment" android:name="com.msf.trivia.AboutFragment" android:label="fragment_about"
+              tools:layout="@layout/fragment_about"/>
 </navigation>
