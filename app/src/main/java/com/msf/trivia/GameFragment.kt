@@ -51,23 +51,21 @@ class GameFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_game, container, false)
-        return binding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        randomizeQuestion()
-        binding.question = currentQuestion
-        binding.submitButton.setOnClickListener {
+        randomizeQuestions()
+        binding.question = this.currentQuestion
+        // Set the onClickListener for the submitButton
+        binding.submitButton.setOnClickListener { view: View ->
             val checkedId = binding.questionRadioGroup.checkedRadioButtonId
-            if(checkedId != NOT_SELECTED_ID){
+            // Do nothing if nothing is checked (id == -1)
+            if (-1 != checkedId) {
                 var answerIndex = 0
                 when (checkedId) {
                     R.id.secondAnswerRadioButton -> answerIndex = 1
                     R.id.thirdAnswerRadioButton -> answerIndex = 2
                     R.id.fourthAnswerRadioButton -> answerIndex = 3
                 }
-
+                // The first answer in the original question is always the correct one, so if our
+                // answer matches, we have the correct answer.
                 if (answers[answerIndex] == currentQuestion.answers[0]) {
                     questionIndex++
                     // Advance to the next question
@@ -76,18 +74,19 @@ class GameFragment : Fragment() {
                         setQuestion()
                         binding.invalidateAll()
                     } else {
-                        it.findNavController().navigate(R.id.action_gameFragment_to_gameWonFragment)
+                        // We've won!  Navigate to the gameWonFragment.
+                        view.findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameWonFragment(numQuestions,questionIndex))
                     }
                 } else {
-                    it.findNavController().navigate(R.id.action_gameFragment_to_gameOverFragment)
+                    // Game over! A wrong answer sends us to the gameOverFragment.
+                    view.findNavController().navigate(GameFragmentDirections.actionGameFragmentToGameOverFragment())
                 }
-            } else {
-                Snackbar.make(it, getString(R.string.select_one), Snackbar.LENGTH_LONG).show()
             }
         }
+        return binding.root
     }
 
-    private fun randomizeQuestion() {
+    private fun randomizeQuestions() {
         questions.shuffle()
         questionIndex = 0
         setQuestion()
