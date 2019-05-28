@@ -1,15 +1,12 @@
 package com.msf.trivia
 
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import android.view.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.msf.trivia.databinding.FragmentGameBinding
 import com.msf.trivia.databinding.FragmentGameWonBinding
 
 
@@ -24,10 +21,35 @@ class GameWonFragment : Fragment() {
         binding.nextMatchButton.setOnClickListener {
             it.findNavController().navigate(GameWonFragmentDirections.actionGameWonFragmentToGameFragment())
         }
-        val args  = arguments?.let { GameWonFragmentArgs.fromBundle(it) }
-        Toast.makeText(context, "Num questions: ${args!!.numQuestions}, NumCorrect: ${args!!.numCorrect}", Toast.LENGTH_LONG).show()
+        setHasOptionsMenu(true)
         return binding.root
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.winner_menu, menu)
+        if (null == getIntent().resolveActivity(activity!!.packageManager)) {
+            // hide the menu item if it doesn't resolve
+            menu?.findItem(R.id.share)?.setVisible(false)
+        }
+    }
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.share -> shareSuccess()
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun shareSuccess(){
+        startActivity(getIntent())
+    }
+
+    private fun getIntent() : Intent {
+        val args  = arguments?.let { GameWonFragmentArgs.fromBundle(it) }
+        val shareIntent = Intent(Intent.ACTION_SEND)
+        shareIntent.setType("text/plain")
+            .putExtra(Intent.EXTRA_TEXT,getString(R.string.share_success_text,args!!.numCorrect, args.numQuestions))
+        return shareIntent
+    }
 
 }
