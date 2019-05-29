@@ -34,4 +34,6 @@
     </fragment>
     <fragment android:id="@+id/aboutFragment" android:name="com.msf.trivia.AboutFragment" android:label="fragment_about"
               tools:layout="@layout/fragment_about"/>
+    <fragment android:id="@+id/rulesFragment" android:name="com.msf.trivia.RulesFragment"
+              android:label="fragment_rules"/>
 </navigation>
